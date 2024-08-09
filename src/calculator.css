@@ -1,0 +1,49 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    background-color: #757575;
+    border-radius: 5px;
+    margin: 20px auto;
+    width: 300px;
+    padding: 3px;
+}
+
+.screen {
+    background-color: #757575;
+    padding: 30px 10px;
+    color: #fff;
+    text-align: right;
+    font-size: 2rem;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    justify-items: center;
+    gap: 1px;
+    background-color: #757575;
+    color: #fff;
+}
+
+.btn {
+    width: 100%;
+    height: 60px;
+    border: none;
+    background-color: #acacac;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+
+.btn:hover {
+    background-color: #757575;
+}
+
+.dot {
+    font-size: 1.6rem;
+    
+}
+
+
+
