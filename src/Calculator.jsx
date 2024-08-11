@@ -1,17 +1,21 @@
 import { useState } from 'react';
+
 import './calculator.css';
 
-function Calculator() {
+import Button from './Components/Button';
+
+import {isOperator} from './utils/helpers';
+
+const Calculator = () => {
     const [calculations, setCalculations] = useState('0');
 
     const pushNumber = (e) => {
+        const lastChar = calculations[calculations.length - 2]
+
         if (calculations === '0') {
             setCalculations(e.target.innerText);
         } else if (
-            (calculations[calculations.length - 2] === '+' ||
-                calculations[calculations.length - 2] === '-' ||
-                calculations[calculations.length - 2] === '/' ||
-                calculations[calculations.length - 2] === '*') &&
+            isOperator(lastChar) &&
             e.target.innerText === '0'
         ) {
             return;
@@ -19,14 +23,11 @@ function Calculator() {
             setCalculations(calculations + e.target.innerText);
         }
     };
-
+    
     const pushOperation = (e) => {
-        if (
-            calculations[calculations.length - 2] === '+' ||
-            calculations[calculations.length - 2] === '-' ||
-            calculations[calculations.length - 2] === '/' ||
-            calculations[calculations.length - 2] === '*'
-        ) {
+        const lastChar = calculations[calculations.length - 2]
+        
+        if (isOperator(lastChar)) {
             setCalculations(
                 calculations.slice(0, -2) + e.target.innerText + ' '
             );
@@ -56,14 +57,13 @@ function Calculator() {
     const calculate = () => {
         try {
             const parts = calculations.trim().split(' ');
-            const lastChar = (parts[parts.length - 1]);
-            if(!isNaN(lastChar)){
+            const lastChar = parts[parts.length - 1];
+            if (!isNaN(lastChar)) {
                 setCalculations(eval(calculations).toString());
             }
         } catch {
-            setCalculations("Error!")
+            setCalculations('Error!');
         }
-        
     };
 
     const pushPercentage = () => {
@@ -92,7 +92,7 @@ function Calculator() {
 
     const pushDot = () => {
         const parts = calculations.trim().split(' ');
-    
+
         if (parts.length > 0) {
             const lastPart = parts[parts.length - 1];
             if (!lastPart.includes('.')) {
@@ -101,70 +101,43 @@ function Calculator() {
         }
     };
 
+    const buttons = [
+        { label: 'C', onClick: deleteAll },
+        { label: '%', onClick: pushPercentage },
+        { label: '+/-', onClick: toggleSign },
+        { label: '/', onClick: pushOperation },
+        { label: '7', onClick: pushNumber },
+        { label: '8', onClick: pushNumber },
+        { label: '9', onClick: pushNumber },
+        { label: '*', onClick: pushOperation },
+        { label: '4', onClick: pushNumber },
+        { label: '5', onClick: pushNumber },
+        { label: '6', onClick: pushNumber },
+        { label: '-', onClick: pushOperation },
+        { label: '1', onClick: pushNumber },
+        { label: '2', onClick: pushNumber },
+        { label: '3', onClick: pushNumber },
+        { label: '+', onClick: pushOperation },
+        { label: '.', onClick: pushDot, className: 'dot' },
+        { label: '0', onClick: pushNumber },
+        { label: '⌫', onClick: deleteLast },
+        { label: '=', onClick: calculate },
+    ];
+
     return (
         <div className="wrapper">
             <div className="screen">
                 <p className="calculations">{calculations}</p>
             </div>
             <div className="buttons">
-                <button className="btn" onClick={deleteAll}>
-                    C
-                </button>
-                <button className="btn" onClick={pushPercentage}>
-                    %
-                </button>
-                <button className="btn" onClick={toggleSign}>
-                    +/-
-                </button>
-                <button className="btn" onClick={pushOperation}>
-                    /
-                </button>
-                <button className="btn" onClick={pushNumber}>
-                    7
-                </button>
-                <button className="btn" onClick={pushNumber}>
-                    8
-                </button>
-                <button className="btn" onClick={pushNumber}>
-                    9
-                </button>
-                <button className="btn" onClick={pushOperation}>
-                    *
-                </button>
-                <button className="btn" onClick={pushNumber}>
-                    4
-                </button>
-                <button className="btn" onClick={pushNumber}>
-                    5
-                </button>
-                <button className="btn" onClick={pushNumber}>
-                    6
-                </button>
-                <button className="btn" onClick={pushOperation}>
-                    -
-                </button>
-                <button className="btn" onClick={pushNumber}>
-                    1
-                </button>
-                <button className="btn" onClick={pushNumber}>
-                    2
-                </button>
-                <button className="btn" onClick={pushNumber}>
-                    3
-                </button>
-                <button className="btn" onClick={pushOperation}>
-                    +
-                </button>
-                <button className="btn dot" onClick={pushDot}>.</button>
-                <button className="btn" onClick={pushNumber}>
-                    0
-                </button>
-                <button className="btn" onClick={deleteLast}>
-                    ⌫
-                </button>
-                <button className="btn" onClick={calculate}>
-                    =
-                </button>
+                {buttons.map((button) => (
+                    <Button
+                        key={button.label}
+                        lable={button.label}
+                        onClick={button.onClick}
+                        className={button.className}
+                    />
+                ))}
             </div>
         </div>
     );
