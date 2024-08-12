@@ -11,6 +11,13 @@ const Calculator = () => {
 
     const pushNumber = (e) => {
         const lastChar = calculations[calculations.length - 2]
+        const parts = calculations.trim().split(' ');
+
+
+        if(parts[parts.length - 1].length >= 15){
+            return;
+            
+        }
 
         if (calculations === '0') {
             setCalculations(e.target.innerText);
