@@ -4,36 +4,52 @@ import './calculator.css';
 
 import Button from './Components/Button';
 
-import {isOperator} from './utils/helpers';
+import { isOperator } from './utils/helpers';
 
 const Calculator = () => {
     const [calculations, setCalculations] = useState('0');
 
-    const pushNumber = (e) => {
-        const lastChar = calculations[calculations.length - 2]
-        const parts = calculations.trim().split(' ');
+    const handleKeyPress = (e) => {
+        const key = e.key;
 
-
-        if(parts[parts.length - 1].length >= 15){
-            return;
-            
-        }
-
-        if (calculations === '0') {
-            setCalculations(e.target.innerText);
-        } else if (
-            isOperator(lastChar) &&
-            e.target.innerText === '0'
-        ) {
-            return;
-        } else {
-            setCalculations(calculations + e.target.innerText);
+        if (!isNaN(key)) {
+            pushNumber({ target: { innerText: key } });
+        } else if (key === '.') {
+            pushDot();
+        } else if (key === '%') {
+            pushPercentage();
+        } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+            pushOperation({ target: { innerText: key } });
+        } else if (key === 'Enter' || key === '=') {
+            calculate();
+        } else if (key === 'Backspace') {
+            deleteLast();
+        } else if (key === 'Escape' || key === 'C' || key === 'c') {
+            deleteAll();
         }
     };
-    
+
+    const pushNumber = (e) => {
+        const newNum = e.target.innerText;
+        const lastChar = calculations[calculations.length - 2];
+        const parts = calculations.trim().split(' ');
+
+        console.log(e.target.innerText);
+
+        if (parts[parts.length - 1].length >= 15) {
+            return;
+        } else if (calculations === '0') {
+            setCalculations(newNum);
+        } else if (isOperator(lastChar) && newNum === '0') {
+            return;
+        } else {
+            setCalculations(calculations + newNum);
+        }
+    };
+
     const pushOperation = (e) => {
-        const lastChar = calculations[calculations.length - 2]
-        
+        const lastChar = calculations[calculations.length - 2];
+
         if (isOperator(lastChar)) {
             setCalculations(
                 calculations.slice(0, -2) + e.target.innerText + ' '
@@ -132,7 +148,7 @@ const Calculator = () => {
     ];
 
     return (
-        <div className="wrapper">
+        <div className="wrapper" onKeyDown={handleKeyPress} tabIndex={0}>
             <div className="screen">
                 <p className="calculations">{calculations}</p>
             </div>
@@ -148,6 +164,6 @@ const Calculator = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Calculator;

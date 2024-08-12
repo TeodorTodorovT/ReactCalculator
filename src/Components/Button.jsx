@@ -1,9 +1,8 @@
 import '../calculator.css';
 
-const Button = ({ lable, onClick, className = '', }) => {
-    
+const Button = ({ lable, onClick, className = ''}) => {
     return (
-        <button className={`btn ${className}`} onClick={onClick}>
+        <button className={`btn ${className}`} onClick={onClick}> 
             {lable}
         </button>
     );
